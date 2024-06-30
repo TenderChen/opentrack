@@ -482,6 +482,8 @@ void main_window::start_tracker_()
             options_widget->register_filter(&*work->libs.pFilter);
     }
 
+    QObject::connect(work.get(), &Work::requestMove, &indicator, &IndicatorWidget::setPosition);
+
     pose_update_timer.start(1000/30);
 
     // NB check valid since SelectedLibraries ctor called

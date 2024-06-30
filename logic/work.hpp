@@ -63,4 +63,7 @@ public:
          const dylibptr& tracker, const dylibptr& filter, const dylibptr& proto);
     void reload_shortcuts();
     bool is_ok() const;
+
+signals:
+    void requestMove(int x, int y); // 用于请求移动 widget
 };

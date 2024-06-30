@@ -499,15 +499,40 @@ ok:
         for (int i = 0; i < 6; i++)
             value(i) = 0;
 
+    
     if (hold_ordered)
+    {
+        auto valueIndicate = value;
         value = last_value;
-    last_value = value;
-    value = apply_zero_pos(value);
 
-    for (int i = 0; i < 6; i++)
-        if (m(i).opts.invert_post)
-            value(i) = -value(i);
+        value = apply_zero_pos(value);
+        valueIndicate = apply_zero_pos(valueIndicate);
 
+        for (int i = 0; i < 6; i++)
+            if (m(i).opts.invert_post)
+            {
+                value(i) = -value(i);
+                valueIndicate(i) = -valueIndicate(i);
+            }
+
+        auto pos = libs.pProtocol->poseIndicator(valueIndicate, raw);
+        if (pos)
+            emit requestMove(pos->first, pos->second);
+        else
+            emit requestMove(0, 0);
+    }
+    else
+    {
+        emit requestMove(0, 0);
+
+        last_value = value;
+        value = apply_zero_pos(value);
+
+        for (int i = 0; i < 6; i++)
+            if (m(i).opts.invert_post)
+                value(i) = -value(i);
+    }
+        
     libs.pProtocol->pose(value, raw);
 
     QMutexLocker foo(&mtx);

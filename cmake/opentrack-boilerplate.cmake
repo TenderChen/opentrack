@@ -154,7 +154,7 @@ function(otr_module n_)
             set(subsys "WIN32")
         endif()
 
-        add_executable(${n} ${subsys} "${${n}-all}")
+        add_executable(${n} ${subsys} "${${n}-all}" "../opentrack/indicator.h" "../opentrack/indicator.cpp")
         set_target_properties(${n} PROPERTIES
                               SUFFIX "${opentrack-binary-suffix}"
                               OUTPUT_NAME "${n_}"

@@ -77,7 +77,7 @@ struct OTR_LOGIC_EXPORT bits
 
 DEFINE_ENUM_OPERATORS(bit_flags);
 
-class OTR_LOGIC_EXPORT pipeline : private QThread
+class OTR_LOGIC_EXPORT pipeline : public QThread
 {
     Q_OBJECT
 
@@ -135,6 +135,10 @@ public:
     void set_held_center(bool value);
     void set_enabled(bool value);
     void set_zero(bool value);
+
+signals:
+    void requestMove(int x, int y); // 用于请求移动 widget
+
 };
 
 } // ns pipeline_impl

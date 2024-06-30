@@ -34,12 +34,14 @@
 #include <memory>
 
 #include "ui_main-window.h"
+#include "indicator.h"
 
 class main_window final : public QMainWindow, private State
 {
     Q_DECLARE_TR_FUNCTIONS(main_window)
 
     Ui::main_window ui;
+    IndicatorWidget indicator;
 
     std::unique_ptr<QSystemTrayIcon> tray;
     QMenu tray_menu { this };

@@ -32,14 +32,10 @@ void mouse::pose(const double* headpose, const double*)
     int mouse_x = 0, mouse_y = 0;
 
     if (axis_x == std::clamp(axis_x, (int)Axis_MIN, (int)Axis_MAX))
-        mouse_x = get_value(headpose[axis_x] * invert[axis_x],
-                            *s.sensitivity_x,
-                            axis_x >= 3);
+        mouse_x = get_value(headpose[axis_x] * invert[axis_x], *s.sensitivity_x, axis_x >= 3);
 
     if (axis_y == std::clamp(axis_y, (int)Axis_MIN, (int)Axis_MAX))
-        mouse_y = get_value(headpose[axis_y] * invert[axis_y],
-                            *s.sensitivity_y,
-                            axis_y >= 3);
+        mouse_y = get_value(headpose[axis_y] * invert[axis_y], *s.sensitivity_y, axis_y >= 3);
 
     int dx = get_delta(mouse_x, last_x), dy = mouse_y - last_y;
 
@@ -76,6 +72,50 @@ void mouse::pose(const double* headpose, const double*)
         }
         }
     }
+}
+
+std::optional<std::pair<int, int>> mouse::poseIndicator(const double* headpose, const double* raw) const
+{
+    const int axis_x = s.mouse_x - 1;
+    const int axis_y = s.mouse_y - 1;
+
+    int mouse_x = 0, mouse_y = 0;
+
+    if (axis_x == std::clamp(axis_x, (int)Axis_MIN, (int)Axis_MAX))
+        mouse_x = get_value(headpose[axis_x] * invert[axis_x], *s.sensitivity_x, axis_x >= 3);
+
+    if (axis_y == std::clamp(axis_y, (int)Axis_MIN, (int)Axis_MAX))
+        mouse_y = get_value(headpose[axis_y] * invert[axis_y], *s.sensitivity_y, axis_y >= 3);
+
+    int dx = get_delta(mouse_x, last_x), dy = mouse_y - last_y;
+
+    POINT pt{};
+    (void)GetCursorPos(&pt);
+
+    if (dx || dy)
+    {
+        switch (s.input_method)
+        {
+        default:
+            eval_once(qDebug() << "proto/mouse: invalid input method");
+            [[fallthrough]];
+        case input_direct:
+        {
+            // 获取系统DPI
+            UINT dpi = GetDpiForSystem();
+            OutputDebugStringW(std::wstring(L"DPI: " + std::to_wstring(dpi) + L"\n").c_str());
+            float scalingFactor = dpi / 96.0f; // 默认DPI是96
+            // 计算新的鼠标位置，考虑DPI缩放
+            dx = static_cast<int>(dx * scalingFactor);
+            dy = static_cast<int>(dy * scalingFactor);
+            break;
+        }
+        case input_legacy:
+            break;
+        }
+    }
+
+    return std::make_pair(pt.x + dx, pt.y + dy);
 }
 
 QString mouse::game_name()

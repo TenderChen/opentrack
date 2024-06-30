@@ -65,6 +65,7 @@ Work::Work(const Mappings& m, QFrame* frame,
     if (!is_ok())
         return;
     reload_shortcuts();
+    QObject::connect(&pipeline_, &pipeline::requestMove, this, &Work::requestMove);
     pipeline_.start();
 }
 
