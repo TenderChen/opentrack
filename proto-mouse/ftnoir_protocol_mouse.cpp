@@ -103,7 +103,7 @@ std::optional<std::pair<int, int>> mouse::poseIndicator(const double* headpose, 
         {
             // 获取系统DPI
             UINT dpi = GetDpiForSystem();
-            OutputDebugStringW(std::wstring(L"DPI: " + std::to_wstring(dpi) + L"\n").c_str());
+            // OutputDebugStringW(std::wstring(L"DPI: " + std::to_wstring(dpi) + L"\n").c_str());
             float scalingFactor = dpi / 96.0f; // 默认DPI是96
             // 计算新的鼠标位置，考虑DPI缩放
             dx = static_cast<int>(dx * scalingFactor);

@@ -30,6 +30,7 @@ public:
     mouse() = default;
     module_status initialize() override { return status_ok(); }
     void pose(const double* headpose, const double*) override;
+    bool stopIfHeld() const override { return true; }
     std::optional<std::pair<int, int>> poseIndicator(const double* pose, const double* raw) const override;
     QString game_name() override;
 };

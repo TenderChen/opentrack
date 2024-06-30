@@ -168,10 +168,8 @@ struct OTR_API_EXPORT IProtocol : module_status_mixin
     // called 250 times a second with XYZ yaw pitch roll pose
     // try not to perform intense computation here. use a thread.
     virtual void pose(const double* pose, const double* raw) = 0;
-    virtual std::optional<std::pair<int, int>> poseIndicator(const double* pose, const double* raw) const
-    {
-        return std::nullopt;
-    }
+    virtual bool stopIfHeld() const { return false; } // return true to stop pose() if position is held
+    virtual std::optional<std::pair<int, int>> poseIndicator(const double* pose, const double* raw) const {return std::nullopt; }
     // return game name or placeholder text
     virtual QString game_name() = 0;
 };
